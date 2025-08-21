@@ -1,0 +1,24 @@
+name: workspace
+description: "A new Flutter project."
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: ^3.7.0
+
+dependencies:
+  camera: ^0.11.2
+  collection: ^1.19.1
+  flutter:
+    sdk: flutter
+  flutter_face_sdk:
+    path: ../face_id_plugin/Flutter
+  get_it: ^8.2.0
+  permission_handler: ^12.0.1
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true
