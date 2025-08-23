@@ -6,14 +6,15 @@ import 'package:camera/camera.dart';
 import 'package:flutter_face_sdk/flutter_face_sdk.dart' as fsdk;
 import 'package:flutter_face_sdk/converter.dart' as f_converter;
 
+final converter = f_converter.ImageConverter();
+
 void faceProcessIsolateFunction(Map<String, dynamic> message) {
   final image = message['image'];
   final SendPort sendPort = message['sendPort'];
   fsdk.Image? fsdkImage;
   fsdk.FacePosition? fp;
   try {
-    fsdkImage = fsdk.Image.fromHandle(image);
-
+    fsdkImage = converter.convert(image);
     if (Platform.isAndroid) {
       var rotatedImage = fsdkImage.rotate90(-1);
       fsdkImage.free();
@@ -37,8 +38,6 @@ class FaceIdService {
   SendPort? _sendPort;
   bool _isolateReady = false;
   final _isolateInitPort = ReceivePort();
-  final converter = f_converter.ImageConverter();
-  late fsdk.Image _fsdkImage;
 
   void activate() {
     fsdk.ActivateLibrary('');
@@ -66,8 +65,7 @@ class FaceIdService {
       throw Exception('Isolate not initialized. Call initIsolate() first.');
     }
     final responsePort = ReceivePort();
-    _fsdkImage = converter.convert(image);
-    _sendPort!.send({'image': _fsdkImage.handle, 'sendPort': responsePort.sendPort});
+    _sendPort!.send({'image': image, 'sendPort': responsePort.sendPort});
     await responsePort.first;
     responsePort.close();
     return;
