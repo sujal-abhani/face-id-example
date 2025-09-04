@@ -44,8 +44,8 @@ class CameraService {
 
   void _startImageStream(Future<void> Function(CameraImage image) onImage) {
     _cameraController!.startImageStream((image) async {
-      // if (_processing) return;
-      // _processing = true;
+      if (_processing) return;
+      _processing = true;
 
       try {
         await onImage(image);
